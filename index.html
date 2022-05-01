@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Very Interesting Test</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background-color: rgb(227, 227, 255);
+            font-family: 'Helvetica', sans-serif;
+        }
+        main{
+            height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .wrapper{
+            background-color: rgb(169, 168, 255);
+            padding: 30px;
+            width: 1000px;
+            margin: 0 auto;
+        }
+        .pbar{
+            margin-top: 40px;
+            height: 50px;
+            background-color: #cecece;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .pbar-fill{
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: darkgreen;
+            height: 50px;
+            width: 0%;
+        }
+        #percentage{
+            color: #fff;
+            z-index: 9999;
+        }
+        .form{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        #textfield{
+            padding: 10px;
+        }
+        #btnstart{
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="wrapper">
+            <div class="form">
+                <label for="textfield"><strong>Set delays</strong></label>
+                <input type="text" id="textfield">
+                <button id="btnstart"><strong>Start</strong></button>
+            </div>
+            <div class="pbar">
+                <span id="percentage">0%</span>
+                <div class="pbar-fill" id="fill"></div>
+            </div>
+        </div>
+    </main>
+</body>
+<script>
+    document.querySelector('#btnstart').addEventListener('click',progress)
+    function progress(){
+        perc(0)
+        let str = document.querySelector('#textfield').value
+        let inp = str.split(',').map(Number)
+        let timeouts = [...new Set(inp)]
+        let parts = 100/timeouts.length
+        parts = parseFloat(parts)
+        console.log(timeouts,parts)
+        let time = 0
+        for (let i = 0; i < timeouts.length; i++){
+            time += timeouts[i]
+            let timerId = setTimeout(perc, time * 1000, parts)
+        }
+    }
+    function perc(part){
+        let span = document.querySelector('#percentage')
+        if(part == 0){
+            span.innerText = '0%'
+            document.getElementById('fill').style.width = '0%'
+            return
+        }
+        let done = parseFloat(span.innerText)
+        let i = 1
+        for(let j = done; j < done+part; j += 0.01){
+            if (j > 100 || j >= 99.97){
+                j = 100
+            }
+            i++
+            setTimeout(() => {
+                span.innerText = (Math.ceil(j * 100) / 100).toString() + '%'
+                document.getElementById('fill').style.width = j.toString() + '%'
+            }, 0.1*i)
+        } 
+    }
+</script>
+</html>
